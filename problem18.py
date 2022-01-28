@@ -1,4 +1,4 @@
-FILENAME = "euler/triangle.txt"
+FILENAME = "triangle.txt"
 
 
 def main():

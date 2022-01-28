@@ -1,16 +1,20 @@
-from itertools import permutations
-
-LIMIT = 10
+from typing import Iterator
 
 
 def main():
-    itr = permutations(range(LIMIT), LIMIT)
-    counter = 1
-    for v in itr:
-        if counter == 1000000:
-            print(v)
+    f = fib()
+    for idx, val in enumerate(f):
+        if len(str(val)) == 1000:
+            print(idx)
             break
-        counter += 1
+
+
+def fib() -> Iterator[int]:
+    a = 0
+    b = 1
+    while True:
+        yield a
+        a, b = b, a + b
 
 
 if __name__ == "__main__":
