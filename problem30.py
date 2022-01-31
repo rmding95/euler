@@ -1,14 +1,19 @@
-from util import print_factorization, prime_factorization, primes_up_to_n_optimized
-
-POWER = 4
+POWER = 5
 
 
 def main():
-    primes = primes_up_to_n_optimized(10001)
-    nums = [1634, 8208, 9474]
-    for num in nums:
-        pf = prime_factorization(num, primes)
-        print(print_factorization(num, pf))
+    nums: list[int] = []
+    for i in range(2, 1000000):
+        num = i
+        digit_sum = 0
+        while num > 0:
+            digit = num % 10
+            digit_sum += pow(digit, POWER)
+            num //= 10
+        if digit_sum == i:
+            nums.append(i)
+    print(nums)
+    print(sum(nums))
 
 
 if __name__ == "__main__":
