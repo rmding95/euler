@@ -1,7 +1,10 @@
 from collections import defaultdict
+from functools import wraps
 from itertools import product
 from math import gcd, sqrt, prod
 from random import randint
+from time import time
+from typing import Callable
 
 
 def primes_up_to_n_optimized(n: int) -> list[int]:
@@ -146,3 +149,13 @@ def test_primes_from_file(filename: str) -> None:
     assert len(primes) == len(my_primes)
     assert primes == my_primes
     print("all good!")
+
+
+def timer(func: Callable) -> Callable:
+    @wraps(func)
+    def wrapper():
+        tic = time()
+        func()
+        print(f"Runtime {time() - tic} seconds")
+
+    return wrapper
