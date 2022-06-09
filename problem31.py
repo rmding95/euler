@@ -1,45 +1,31 @@
-from collections import defaultdict
-from typing import DefaultDict, NamedTuple
+from util import timer
 
-COINS = [1, 2, 5]
-
-
-class CoinCombination(NamedTuple):
-    coin: int
-    number: int
-
-    def __repr__(self) -> str:
-        return f"({self.coin}, {self.number})"
+COINS = [200, 100, 50, 20, 10, 5, 2, 1]
 
 
+@timer
 def main():
-    cache: DefaultDict[int, list[list[CoinCombination]]] = defaultdict(list)
-    for coin in COINS:
-        print(coin, get_combinations(coin, cache))
+    print(dfs())
 
 
-def get_combinations(value: int, cache: DefaultDict[int, list[list[CoinCombination]]]) -> list[list[CoinCombination]]:
-    _combination_helper(value, cache)
-    return cache[value]
+def dfs() -> int:
+    return _dfs_helper(200, 0, {})
 
 
-def _combination_helper(value: int, cache: DefaultDict[int, list[list[CoinCombination]]]) -> None:
-    for coin in COINS:
-        if coin >= value:
-            # cache[value].append([CoinCombination(coin, 1)])
-            return
-        top_level_combination: list[CoinCombination] = []
-        top_level_combination.append(CoinCombination(coin, value // coin))
-        if value % coin != 0:
-            top_level_combination.append(CoinCombination(1, value % coin))
-        cache[value].append(top_level_combination)
+def _dfs_helper(amount: int, coin_index: int, cache: dict[tuple[int, int], int]) -> int:
+    if (amount, coin_index) in cache:
+        return cache[amount, coin_index]
+    coin_amount = COINS[coin_index]
+    if coin_amount == 1:
+        return 1
+    combinations = 0
+    i = 0
+    while i * coin_amount <= amount:
+        combinations += _dfs_helper(amount - i * coin_amount, coin_index + 1, cache)
+        i += 1
+    cache[(amount, coin_index)] = combinations
+    return combinations
 
-        for combination in top_level_combination:
-            if combination.coin == 1:
-                continue
-            for i in range(combination.number):
-                for replacement_combinations in cache[combination.coin]:
-                
 
 if __name__ == "__main__":
     main()

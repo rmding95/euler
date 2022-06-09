@@ -159,3 +159,49 @@ def timer(func: Callable) -> Callable:
         print(f"Runtime {time() - tic} seconds")
 
     return wrapper
+
+
+def get_digits(n: int) -> list[int]:
+    digits: list[int] = []
+    while n > 0:
+        digits.append(n % 10)
+        n //= 10
+    return digits
+
+
+def is_prime(n: int) -> bool:
+    """A deterministic Miller-Rabin test based off testing specific witness numbers depending on N"""
+    if n == 2:
+        return True
+    if n % 2 == 0:
+        return False
+    if n < 2047:
+        witnesses = [2]
+    elif n < 1373653:
+        witnesses = [2, 3]
+    elif n < 1122004669633:
+        witnesses = [2, 13, 23, 1662803]
+    elif n < pow(2, 64):
+        witnesses = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]
+    elif n < 3317044064679887385961981:
+        witnesses = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41]
+    else:
+        raise Exception(f"{n} is too large for this implementation")
+    powers_of_two = 0
+    n_copy = n - 1
+    while n_copy % 2 == 0:
+        n_copy //= 2
+        powers_of_two += 1
+    # print(f"{n} can be written as 2^{powers_of_two} * {n_copy} + 1")
+    for witness in witnesses:
+        x = pow(witness, n_copy, n)
+        if x == 1 or x == n - 1:
+            continue
+        for _ in range(powers_of_two - 1):
+            x = pow(x, 2, n)
+            if x == n - 1:
+                break
+        if x == n - 1:
+            continue
+        return False
+    return True
