@@ -205,3 +205,13 @@ def is_prime(n: int) -> bool:
             continue
         return False
     return True
+
+
+def tuple_to_int(t: tuple[int, ...]) -> int:
+    """Convert a tuple like (1, 2, 3) to an int,assuming the greatest digit
+    is the left-most, this example would return 123"""
+    t_len = len(t)
+    num = 0
+    for i in range(t_len):
+        num += pow(10, t_len - i - 1) * t[i]
+    return num
